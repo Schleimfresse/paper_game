@@ -1,0 +1,24 @@
+{
+  "name": "paper_game",
+  "version": "1.0.0",
+  "description": "A digital version of a game I play with my friends.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Schleimfresse/paper_game.git"
+  },
+  "keywords": [
+    "js",
+    "node",
+    "socket.io"
+  ],
+  "author": "schleimfresse",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Schleimfresse/paper_game/issues"
+  },
+  "homepage": "https://github.com/Schleimfresse/paper_game#readme"
+}
