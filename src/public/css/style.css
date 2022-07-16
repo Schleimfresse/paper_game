@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400&display=swap");
+* {
+  font-family: "Montserrat", sans-serif;
+  transition: 250ms;
+  overflow: hidden;
+  --standart_gray: #171717;
+  --header: #171717;
+  --listitem-bg: rgba(0, 0, 0, 0.2);
+  --darker_gray: #6e6e6e;
+  --border-color: #404040;
+  --color: #fff;
+  --shadow: 0px 3px 6px 0px rgba(107, 107, 107, 40%),
+    0px 1px 3px 0px rgb(0 0 0 / 8%);
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--standart_gray);
+  color: var(--color);
+}
+#pre-room {
+  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-height: 50vh;
+  min-width: 50vw;
+  border: var(--border-color) 1px solid;
+  padding: 1em;
+  position: absolute;
+}
+.user-listitem {
+  list-style: none;
+  padding: 0.5em;
+  background-color: var(--listitem-bg);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: fit-content;
+  margin: 0.7em;
+  border: 1px solid var(--border-color);
+}
+.icon-size-small {
+  font-size: 1.5em;
+}
+.icon-size-medium {
+  font-size: 2em;
+}
+.icon-size-large {
+  font-size: 2.5em;
+}
+.icon-spacing-right {
+  margin-right: 10px;
+}
+.icon-spacing-left {
+  margin-right: 10px;
+}
+#form {
+  padding: 2em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  border: var(--border-color) 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+#form > * {
+  margin-bottom: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  padding-top: 0.3em;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+}
+#backToName {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+#waitroom-box-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: var(--border-color) solid 1px;
+}

@@ -1,15 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script defer src="js/client.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" defer src="js/client.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <link rel="stylesheet" href="css/style.css" />
     <title>Paper game | Join</title>
-</head>
-<body>
-    <form action="gameroom.html">
-        <input type="submit">
-    </form>
-</body>
+  </head>
+  <body>
+      <form id="form" onsubmit="this.style.display = 'none'; return false;">
+        <label><h1>Name</h1></label><input id="name" type="text" placeholder="Your name" required autocomplete="false" />
+        <input type="submit" value="Join" />
+      </form>
+    <div id="pre-room">
+      <div id="waitroom-box-header"><h1>Players connected:</h1><div id="backToName"><ion-icon onclick="backToName();" class="icon-size-medium" name="arrow-back-circle-outline"></ion-icon></div></div>
+      <ul id="player-list"></ul>
+    </div>
+  </body>
 </html>
