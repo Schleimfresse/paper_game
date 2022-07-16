@@ -8,12 +8,15 @@
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1"
   },
+  "devdependencies": {
+    "nodemon": "^2.0.19"
+  },
   "name": "paper_game",
   "version": "1.0.0",
   "description": "A digital version of a game I play with my friends.",
   "main": "server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "nodemon src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {

@@ -11,7 +11,7 @@ database.loadDatabase();
 const users = require('./routes/users');
 app.use(bodyparser.json({ limit: "1mb" }));
 app.use('/', users);
-app.use(express.static("public"));
+app.use(express.static("src/public"));
 server.listen(port, () => {
   console.log(`app listening at Port: ${port}`);
 });

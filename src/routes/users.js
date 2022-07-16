@@ -23,8 +23,7 @@ router.get("/users", (request, response) => {
 router.post("/users", (request, response) => {
   const data = request.body;
   console.log(
-    "[SERVER] a request has been received via POST for UserDatabase [INSERT Commission]" +
-      data
+    "[SERVER] a request has been received via POST for UserDatabase [INSERT Commission]"
   );
   database.insert(data);
   response.json(data);
