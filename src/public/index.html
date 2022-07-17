@@ -14,13 +14,15 @@
     <title>Paper game | Join</title>
   </head>
   <body>
-      <form id="form" onsubmit="this.style.display = 'none'; return false;">
+      <form action="" id="form" onsubmit="return false;">
+        <div id="RoomNo"></div>
         <label><h1>Name</h1></label><input id="name" type="text" placeholder="Your name" required autocomplete="false" />
         <input type="submit" value="Join" />
       </form>
-    <div id="pre-room">
-      <div id="waitroom-box-header"><h1>Players connected:</h1><div id="backToName"><ion-icon onclick="backToName();" class="icon-size-medium" name="arrow-back-circle-outline"></ion-icon></div></div>
-      <ul id="player-list"></ul>
-    </div>
+      <div id="pre-room" style="display: none;">
+        <div id="waitroom-box-header"><h1>Players connected:</h1><div id="backToName"><ion-icon onclick="backToName();" class="icon-size-medium" name="arrow-back-circle-outline"></ion-icon></div></div>
+        <ul id="player-list">
+        </ul>
+      </div>
   </body>
 </html>

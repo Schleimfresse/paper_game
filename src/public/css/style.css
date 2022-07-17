@@ -67,13 +67,10 @@ html {
   transform: translate(-50%, -50%);
   position: absolute;
   border: var(--border-color) 1px solid;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  display: block;
 }
 #form > * {
-  margin-bottom: 1em;
+  margin: 1em;
   padding-left: 0.5em;
   padding-right: 0.5em;
   padding-bottom: 0.3em;

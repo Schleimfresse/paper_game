@@ -1,14 +1,15 @@
 {
   "dependencies": {
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "http": "^0.0.1-security",
     "mongoose": "^6.4.4",
     "nedb": "^1.8.0",
-    "nodemon": "^2.0.19",
+    "node-fetch": "^3.2.8",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1"
   },
-  "devdependencies": {
+  "devDependencies": {
     "nodemon": "^2.0.19"
   },
   "name": "paper_game",
@@ -16,7 +17,7 @@
   "description": "A digital version of a game I play with my friends.",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon src/server.js",
+    "start": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
