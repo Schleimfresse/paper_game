@@ -1,36 +1,10 @@
 // Initial - start -
-require("dotenv").config();
-const bodyparser = require("body-parser");
-const express = require("express");
-const app = express();
-const server = require("http").createServer(app);
-const io = require("socket.io")(server);
-const port = process.env.PORT || 3000;
-
-// app.use
-app.use(bodyparser.json({ limit: "1mb" }));
-//app.use("/users", users);
-app.use(express.static("public"));
-server.listen(port, () => {
-	console.log(`app listening at Port: ${port}`);
-});
+let {app,server,io,port,bodyparsing,listen,static,clientNo, users, userToRoom, gameIsOn, roomNo, removeDisconnectFromArray} = require("./helpers/VariableDefinitions.js");
+static;
+bodyparsing;
+listen;
 // initial - end -
 
-/**
- * Holds the number of the online users. From each room.
- * @params number
- * @returns The number of online users
- */
-let clientNo = 0;
-let users = {};
-/**
- * Contains all users who are currently online. From each room
- * @params []
- * @returns The current online users
- */
-let userToRoom = [];
-let gameIsOn = {};
-let roomNo = {};
 io.sockets.on("connection", connected);
 // Main content - start -
 function connected(socket) {
@@ -92,30 +66,19 @@ function connected(socket) {
 		let dcuser = userToRoom.find(function (e) {
 			return e.socketid === socket.id;
 		});
-		console.log(dcuser)
+		console.log(dcuser);
 		socket.broadcast.emit("removeUserElement", dcuser.name);
 		if (dcuser.name === dcuser.lobby) {
 			roomNo[dcuser.lobby] = undefined;
 			socket.leave(dcuser.lobby);
 
-			removedcfromArray(userToRoom);
+			removeDisconnectFromArray(userToRoom);
 		} else {
 			socket.leave(dcuser.lobby);
-			removedcfromArray(userToRoom);
+			removeDisconnectFromArray(userToRoom);
 		}
 
 		clientNo--;
-		/**
-		 * Removes the entry of the disconnected user from the userToRoom array.
-		 * @param {*} userToRoom
-		 * @returns the updated userToRoom Array
-		 */
-		function removedcfromArray(userToRoom) {
-			const indexOfObject = userToRoom.findIndex((e) => {
-				return e.socketid == socket.id;
-			});
-			userToRoom.splice(indexOfObject, 1);
-		}
 	});
 }
 // Main content - end -
@@ -127,6 +90,5 @@ app.use(function (req, res) {
 	res.sendFile(__dirname + "/public/404.html");
 	return;
 });
-
 
 // <ion-icon name="diamond-outline"></ion-icon>
