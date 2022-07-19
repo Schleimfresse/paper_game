@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" defer src="js/client.js"></script>
+    <script defer src="/socket.io/socket.io.js"></script>
+    <script type="module" defer src="js/client.js"></script>
     <script
       type="module"
       src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
@@ -14,12 +14,25 @@
     <title>Paper game | Join</title>
   </head>
   <body>
-      <form action="" id="form" onsubmit="return false;">
-        <div id="RoomNo"></div>
-        <label><h1>Name</h1></label><input id="name" type="text" placeholder="Your name" required autocomplete="false" />
-        <input type="submit" value="Join" />
+    <div id="joincreateselection">
+      <h1>Choose</h1>
+      <input id="Join" type="button" value="Join" />
+      <input id="Create" type="button" value="Create">
+    </div>
+      <form style="display: none;" action="" id="form" onsubmit="return false;">
+        <div id="fail">This lobby does not exists</div>
+        <label><h1 id="h1">Name</h1></label>
+        <input id="name" type="text" placeholder="Your name" required autocomplete="false" /><br>
+        <input id="roomName" type="text" placeholder="Lobby name" required autocomplete="false" /><br>
+        <input type="submit" value="Join">
+      </form>
+      <form style="display: none;" action="" id="formCreate" onsubmit="return false;">
+        <label><h1 id="h1">Name</h1></label>
+        <input id="nameCreate" type="text" placeholder="Your name" required autocomplete="false" />
+        <input type="submit" value="Create">
       </form>
       <div id="pre-room" style="display: none;">
+        <div id="RoomNo"></div>
         <div id="waitroom-box-header"><h1>Players connected:</h1><div id="backToName"><ion-icon onclick="backToName();" class="icon-size-medium" name="arrow-back-circle-outline"></ion-icon></div></div>
         <ul id="player-list">
         </ul>

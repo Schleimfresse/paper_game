@@ -6,8 +6,6 @@ const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-const database = new Datastore("userdatabase.db");
-database.loadDatabase();
 //const users = require("./routes/users");
 const port = process.env.PORT || 3000;
 
@@ -22,44 +20,68 @@ server.listen(port, () => {
 let clientNo = 0;
 let users = {};
 let userToRoom = {};
+let gameIsOn = {};
+let roomNo = {};
 io.sockets.on("connection", connected);
-var allClients = [];
 // Main content - start -
 function connected(socket) {
 	clientNo++;
-	roomNo = clientNo / 4.1;
-	if (roomNo < 1){
-	roomNo = Math.round(1)
+	if (clientNo % 6 === 1) {
+		firstplayer = 2;
 	}
-	else if (roomNo > 1) {
-		roomNo = Math.round(clientNo / 4.1);
-	}
-	let data = {room: roomNo,client: clientNo}
-	socket.join(roomNo);
-	socket.emit("serverMsg", (data));
 
-	allClients.push(socket.id);
-	console.log(allClients);
+	roomNo[firstplayer] = clientNo / 4.1;
+
+	if (roomNo[firstplayer] < 1) {
+		roomNo[firstplayer] = Math.round(1);
+	} else if (roomNo[firstplayer] > 1) {
+		roomNo[firstplayer] = Math.round(clientNo / 4.1);
+	}
 	console.log(
-		`New client connection: ${clientNo}, room nr. ${roomNo} (${socket.id})`
+		`New client connection: ${clientNo}, room nr. ${roomNo[firstplayer]} (${socket.id})`
 	);
+
 	socket.on("newplayerName", (name) => {
+		console.log(roomNo[firstplayer]);
+		if (roomNo[firstplayer] === 1) {
+			//roomNo = 1;
+			roomNo = name;
+		}
+		let data = { room: roomNo, client: clientNo };
+		socket.join(roomNo[firstplayer]);
+		socket.emit("serverMsg", data);
+
+		console.log("Just came: ", name);
+		users[socket.id] = name;
+		console.log(users);
+		console.log(users[socket.id]);
+		userToRoom[name] = 0;
+		console.log("HENCE UserToRoom: ", userToRoom);
 		socket.broadcast.emit("newplayerName", name);
 	});
 	socket.on("removeUserElement", (name) => {
 		socket.broadcast.emit("removeUserElement", name);
-		database.remove({ value: name });
 	});
 	socket.on("buttonpressed", (data) => {
 		io.to(data.room).emit("newuser");
-		io.to(data.room).emit("startbt", data.client);
+		if (data.client == 1 && data.room == roomNo) {
+			io.to(roomNo[firstplayer]).emit("startbt", data.client);
+		}
 	});
 	socket.on("disconnect", () => {
 		console.log("DISCONNECTION for ", socket.id);
-		console.log("disconn users: ", users);
+		console.log("disconn user: ", users[socket.id]);
 		console.log("disconn userToRoom: ", userToRoom);
+		socket.broadcast.emit("removeUserElement", users[socket.id]);
+		socket.leave(roomNo[firstplayer])
+		try {
+			if (users[socket.id] == roomNo) {
+				
+			}
+		} catch (err) {
+			console.log("Error cannot find room after refresh:", err);
+		}
 		clientNo--;
-		
 	});
 }
 // Main content - end -
