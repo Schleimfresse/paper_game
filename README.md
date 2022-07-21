@@ -6,6 +6,11 @@ A digital version of a game I play with my friends.
 
 Still in progress; round about 30/100%
 
+## Changelog / added features
+- Chat for pre-lobby
+- QoL changes
+- ...
+
 ## Licence
 
 View Licence: 

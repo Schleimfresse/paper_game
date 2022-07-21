@@ -6,38 +6,48 @@ const io = require("socket.io")(server);
 const port = process.env.PORT || 3000;
 const bodyparsing = app.use(bodyparser.json({ limit: "1mb" }));
 const listen = server.listen(port, () => {console.log(`app listening at Port: ${port}`);});
-const static = app.use(express.static("public"));
+const static = app.use(express.static("src/public"));
 /**
- * Holds the number of the online users. global
+ * Holds the number of the online users.
  * @param number
  * @returns The number of online users
+ * @public
  */
-let clientNo = 0;
+clientNo = {
+	number: 0
+};
 /**
- * A list of socket ids with the associated username. global
+ * A list of socket ids with the associated username.
  * @returns A list with all current online users. 
+ * @public
  */
-let users;
+let users = {};
 /**
- * Contains all users who are currently online. global
+ * Contains all users who are currently online.
  * @param {*} Object
  * @returns The current online users
+ * @public
  */
 let userToRoom = [];
 /**
+ * not used atm
  * @returns
+ * @public
  */
 let gameIsOn = {};
-/**
- * @returns
+/** 
+ * Contains all rooms that are created and active; empty rooms are deleted
+ * @returns a list of the current created rooms
+ * @public
  */
 let roomNo = {};
 /**
  * Removes the entry of the disconnected user from the userToRoom array.
  * @param {Object} userToRoom - Array
  * @returns the updated userToRoom array
+ * @public
  */
-function removeDisconnectFromArray(userToRoom) {
+function removeDisconnectFromArray(userToRoom, socket) {
 	const indexOfObject = userToRoom.findIndex((e) => {
 		return e.socketid == socket.id;
 	});
