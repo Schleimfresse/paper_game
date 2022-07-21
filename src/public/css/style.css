@@ -203,7 +203,7 @@ html {
 	min-width: 100%;
 	position: absolute;
 }
-.message{
+.message {
 	box-sizing: border-box;
 	margin-bottom: 0.3em;
 	padding: 0.5em;
@@ -212,23 +212,42 @@ html {
 	display: flex;
 	flex-direction: column;
 }
-.chat-name{
+.chat-name {
 	position: relative;
 	left: 0;
 	top: 0;
 	color: rgb(163, 163, 163);
 	border-bottom: var(--border-color) 1px solid;
 }
-.chat-message-content{
+.chat-message-content {
 	padding-inline: 10px 10px;
-	padding-top: .5em;
-	padding-bottom: .5em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
 }
-.system-message{
+.system-message {
 	color: rgb(163, 163, 163);
 	padding-inline: 15px;
 	background-color: transparent;
 	box-sizing: border-box;
-	padding-bottom: .4em;
-	padding-top: .4em;
+	padding-bottom: 0.4em;
+	padding-top: 0.4em;
+}
+header {
+	font-size: 1.5em;
+	border-bottom: 1px solid rgb(245, 241, 30);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.2em 0 0.2em 0;
+	padding-inline: 1em;
+}
+header #copyrights {
+	color: rgba(107, 107, 107, 40%);
+}
+#header-title {
+	display: flex;
+	align-items: center;
+}
+#header-title ion-icon {
+	padding-right: 0.5em;
 }

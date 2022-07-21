@@ -21,7 +21,7 @@ SOCKET.on("success", (data) => {
 	FORMCREATE.style.display = "none";
 	PREROOM.style.display = "block";
 	ROOMNO.textContent = `You are in ${data.room}'s lobby`;
-	Systemdata = { lobby: data.room, boolean: true, name: data.name };
+	Systemdata = { message: `${data.name} has joined the lobby`, lobby: data.room };
 	SystemMessage(Systemdata);
 	SOCKET.emit("SystemMessage", Systemdata);
 	createElement(data, true);
@@ -56,7 +56,10 @@ FORMCREATE.addEventListener("submit", () => {
 	SOCKET.emit("create", name);
 });
 
-function start() {}
+function StartGame() {
+	HEADER.style.display = "none";
+	PREROOM.style.display = "none";
+}
 // client -> server - end -
 
 // client <- server - start -
@@ -82,7 +85,6 @@ SOCKET.on("createOtherOnlineUsers", (data) => {
 });
 
 SOCKET.on("startbt", () => {
-	STARTBT.setAttribute("onclick", "start();");
 	STARTBT.setAttribute("id", "startbt");
 	STARTBT.setAttribute("class", "bt-small");
 	STARTBT.innerHTML = "Start";

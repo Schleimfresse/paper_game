@@ -22,6 +22,8 @@ const CHATAREA = document.getElementById("chatarea");
 const CHATFORM = document.getElementById("chatform");
 const CHATSUBMIT = document.getElementById("chatsubmit");
 const CHATTEXTFIELD = document.getElementById("chatTextfield");
+const HEADER = document.querySelector("header");
+const x = 5;
 let you = "";
 let LASTCLICK = 0;
 let ICON = "";
@@ -57,13 +59,9 @@ function createElement(data, boolean) {
 	document.getElementById(`${data.name}`).children[1].innerText += data.name + you;
 }
 function SystemMessage(data) {
-	if (data.boolean) {
-		userstatus = "joined";
-	} else if (!data.boolean) {
-		userstatus = "left";
-	}
-	const ITEM = document.createElement("div");
-	ITEM.setAttribute("class", "system-message");
-	ITEM.innerText = `${data.name} has ${userstatus} the lobby`;
-	CHATAREA.appendChild(ITEM);
-};
+	console.log("data", data);
+	const ITEMSys = document.createElement("div");
+	ITEMSys.setAttribute("class", "system-message");
+	ITEMSys.innerText = data.message;
+	CHATAREA.appendChild(ITEMSys);
+}

@@ -97,15 +97,21 @@ function connected(socket) {
 	socket.on("ActiveLobbyDataRequest", () => {
 		socket.emit("ActiveLobbyDataRequest", userToRoom);
 	});
-	socket.on("getNameForChat", (data) => {
-		const userObject = userToRoom.find((e) => {
-			return e.socketid == socket.id;
+	socket.on("getInfoForChat", (data) => {
+		let userObject = userToRoom.find((e) => {
+			return e.socketid == data;
 		});
-		data = { user: users[data], lobby: userObject.lobby };
-		socket.emit("getNameForChat", data);
+		let playerAmount = userToRoom.filter((e) => {
+			return e.lobby == userObject.lobby;
+		});
+		data = { user: userObject.name, lobby: userObject.lobby, amount: playerAmount.length };
+		socket.emit("getInfoForChat", data);
 	});
 	socket.on("sendMessageToOtherClients", (data) => {
 		socket.to(data.lobby).emit("sendMessageToOtherClients", data);
+	});
+	socket.on("StartGame", (data) => {
+		socket.to(data.lobby).emit("StartGame");
 	});
 	socket.on("SystemMessage", (data) => {
 		socket.to(data.lobby).emit("SystemMessage", data);
@@ -117,7 +123,7 @@ function connected(socket) {
 		let dcuser = userToRoom.find(function (e) {
 			return e.socketid === socket.id;
 		});
-		Systemdata = { boolean: false, name: dcuser.name };
+		Systemdata = { message: `${dcuser.name} has left the lobby`};
 		socket.to(dcuser.lobby).emit("SystemMessage", Systemdata);
 		socket.broadcast.emit("removeUserElement", dcuser.name);
 		if (dcuser.name === dcuser.lobby) {
