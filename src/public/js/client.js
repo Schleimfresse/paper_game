@@ -10,9 +10,9 @@ SOCKET.on("ActiveLobbyDataRequest", (data) => {
 		}
 	}
 });
-
 SOCKET.on("connect", () => {
 	SOCKET.emit("ActiveLobbyDataRequest");
+
 });
 
 SOCKET.on("success", (data) => {
@@ -56,10 +56,6 @@ FORMCREATE.addEventListener("submit", () => {
 	SOCKET.emit("create", name);
 });
 
-function StartGame() {
-	HEADER.style.display = "none";
-	PREROOM.style.display = "none";
-}
 // client -> server - end -
 
 // client <- server - start -

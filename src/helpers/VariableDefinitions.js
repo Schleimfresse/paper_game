@@ -5,8 +5,12 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const port = process.env.PORT || 3000;
 const bodyparsing = app.use(bodyparser.json({ limit: "1mb" }));
-const listen = server.listen(port, () => {console.log(`app listening at Port: ${port}`);});
+const listen = server.listen(port, () => {
+	console.log(`app listening at Port: ${port}`);
+});
+const mongoose = require('mongoose');
 const static = app.use(express.static("src/public"));
+const URI = "mongodb+srv://user1:UJQ8ASHxMDNgEKEk@cluster0.fucjh.mongodb.net/?retryWrites=true&w=majority"
 /**
  * Holds the number of the online users.
  * @param number
@@ -14,11 +18,11 @@ const static = app.use(express.static("src/public"));
  * @public
  */
 clientNo = {
-	number: 0
+	number: 0,
 };
 /**
  * A list of socket ids with the associated username.
- * @returns A list with all current online users. 
+ * @returns A list with all current online users.
  * @public
  */
 let users = {};
@@ -30,17 +34,22 @@ let users = {};
  */
 let userToRoom = [];
 /**
- * not used atm
- * @returns
+ * Contains all users who are currently in a game
+ * @returns an array with all users who are currently in a game
  * @public
  */
-let gameIsOn = {};
-/** 
+let gameIsOn = [];
+/**
  * Contains all rooms that are created and active; empty rooms are deleted
  * @returns a list of the current created rooms
  * @public
  */
 let roomNo = {};
+/**
+ * Contains the number how much rounds are played; on default its set to 6
+ * @public
+ */
+const rounds = 6;
 /**
  * Removes the entry of the disconnected user from the userToRoom array.
  * @param {Object} userToRoom - Array
@@ -53,5 +62,44 @@ function removeDisconnectFromArray(userToRoom, socket) {
 	});
 	userToRoom.splice(indexOfObject, 1);
 }
+function removeStartedRoomFromArray(array, data) {
+	const ARRAYLENGTH = array.length;
+	for (let i = 0; i < ARRAYLENGTH; i++) {
+		const index = array.findIndex((e) => {
+			return e.lobby == data.lobby;
+		});
+		if (index !== -1) {
+			let spliceArray = array.splice(index, 1);
+			let obj = spliceArray[0];
+			const filterforobjects = gameIsOn.filter((e) => {
+				return e.lobby == obj.lobby;
+			}); 
+			obj.playerindex = filterforobjects.length + 1;
+			gameIsOn.push(obj);
+			console.log(gameIsOn);
+		}
+	}
+}
 
-module.exports = {bodyparser,app,express,server,io,port,bodyparsing,listen,static,clientNo, users, userToRoom, gameIsOn, roomNo, removeDisconnectFromArray};
+module.exports = {
+	bodyparser,
+	app,
+	express,
+	server,
+	io,
+	port,
+	bodyparsing,
+	listen,
+	static,
+	clientNo,
+	users,
+	userToRoom,
+	gameIsOn,
+	roomNo,
+	removeDisconnectFromArray,
+	removeStartedRoomFromArray,
+	rounds,
+	URI,
+	mongoose,
+	server,
+};

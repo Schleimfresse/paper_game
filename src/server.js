@@ -11,10 +11,24 @@ const {
 	gameIsOn,
 	roomNo,
 	removeDisconnectFromArray,
+	removeStartedRoomFromArray,
+	rounds,
+	URI,
+	mongoose,
+	server,
 } = require("./helpers/VariableDefinitions.js");
+const Text = require('./models/content');
 static;
 bodyparsing;
 listen;
+mongoose.connect(
+	`mongodb:${server}/database`,
+	() => {
+		console.log("connected");
+	},
+	(e) => console.error(e)
+);
+
 // initial - end -
 
 io.sockets.on("connection", connected);
@@ -36,8 +50,6 @@ function connected(socket) {
 			socket.emit("success", senddata);
 			console.log("Just came: ", data.name);
 			users[socket.id] = data.name;
-			console.log("all Users", users);
-			console.log("UserToRoom without new User", userToRoom);
 			let createData = userToRoom.filter(function (e) {
 				return e.lobby == lobby;
 			});
@@ -47,7 +59,6 @@ function connected(socket) {
 				socketid: socket.id,
 				icon: false,
 			});
-			console.log("createDATA", createData);
 			socket.emit("createOtherOnlineUsers", createData);
 		} else {
 			socket.emit("fail", true);
@@ -56,8 +67,6 @@ function connected(socket) {
 	socket.on("create", (data) => {
 		if (data != roomNo[data]) {
 			roomNo[data] = data;
-			console.log("create roomno", roomNo[data]);
-			console.log("create roomno all", roomNo);
 			socket.join(roomNo[data]);
 			console.log(
 				`New client connection: ${clientNo.number}, room nr. ${roomNo[data]} (${socket.id})`
@@ -78,19 +87,22 @@ function connected(socket) {
 				socketid: socket.id,
 				icon: true,
 			});
-			console.log("usertoroom", userToRoom);
 			socket.broadcast.emit("ActiveLobbyDataRequest", userToRoom);
 		} else {
 			socket.emit("fail", false);
 		}
 	});
-
+	socket.on('addContentToDb', (data) => {
+		const quantity = gameIsOn.filter((e) => {
+			return e.lobby == data.game;
+		});
+		io.in(data.game).emit('updateReadyPlayers', quantity.length);
+	})
 	socket.on("removeUserElement", (name) => {
 		socket.broadcast.emit("removeUserElement", name);
 	});
 
 	socket.on("NewUserUpdateOtherClients", (data) => {
-		console.log(data.room);
 		socket.to(data.room).emit("AddElementToOtherClients", data);
 	});
 
@@ -111,7 +123,13 @@ function connected(socket) {
 		socket.to(data.lobby).emit("sendMessageToOtherClients", data);
 	});
 	socket.on("StartGame", (data) => {
-		socket.to(data.lobby).emit("StartGame");
+		removeStartedRoomFromArray(userToRoom, data);
+		const currentRoomUsers = gameIsOn.filter((e) => {
+			return e.lobby == data.lobby;
+		});
+		console.log(currentRoomUsers);
+		Senddata = { gameIsOn, users, all: currentRoomUsers.length };
+		io.in(data.lobby).emit("StartGame", Senddata);
 	});
 	socket.on("SystemMessage", (data) => {
 		socket.to(data.lobby).emit("SystemMessage", data);
@@ -123,20 +141,21 @@ function connected(socket) {
 		let dcuser = userToRoom.find(function (e) {
 			return e.socketid === socket.id;
 		});
-		Systemdata = { message: `${dcuser.name} has left the lobby`};
-		socket.to(dcuser.lobby).emit("SystemMessage", Systemdata);
-		socket.broadcast.emit("removeUserElement", dcuser.name);
-		if (dcuser.name === dcuser.lobby) {
-			roomNo[dcuser.lobby] = undefined;
-			socket.leave(dcuser.lobby);
-			removeDisconnectFromArray(userToRoom, socket);
-			console.log("Usertoroom", userToRoom);
-		} else {
-			socket.leave(dcuser.lobby);
-			removeDisconnectFromArray(userToRoom, socket);
-			console.log("Usertoroom", userToRoom);
+		if (dcuser != undefined) {
+			Systemdata = { message: `${dcuser.name} has left the lobby` };
+			socket.to(dcuser.lobby).emit("SystemMessage", Systemdata);
+			socket.broadcast.emit("removeUserElement", dcuser.name);
+			if (dcuser.name === dcuser.lobby) {
+				roomNo[dcuser.lobby] = undefined;
+				socket.leave(dcuser.lobby);
+				removeDisconnectFromArray(userToRoom, socket);
+				console.log("Usertoroom", userToRoom);
+			} else {
+				socket.leave(dcuser.lobby);
+				removeDisconnectFromArray(userToRoom, socket);
+				console.log("Usertoroom", userToRoom);
+			}
 		}
-
 		clientNo.number--;
 	});
 }

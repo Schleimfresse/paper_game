@@ -57,7 +57,6 @@ STARTBT.addEventListener("click", () => {
 					}, i * 1000);
 				}
 				setTimeout(() => {
-					StartGame();
 					SOCKET.emit("StartGame", data);
 				}, 5000);
 			}
@@ -67,7 +66,4 @@ STARTBT.addEventListener("click", () => {
 });
 SOCKET.on("SystemMessage", (data) => {
 	SystemMessage(data);
-});
-SOCKET.on("StartGame", () => {
-	StartGame();
 });

@@ -23,7 +23,15 @@ const CHATFORM = document.getElementById("chatform");
 const CHATSUBMIT = document.getElementById("chatsubmit");
 const CHATTEXTFIELD = document.getElementById("chatTextfield");
 const HEADER = document.querySelector("header");
+const GAMETEXTSUBMIT = document.getElementById("game-text-submit");
+const GAMETEXTAREA = document.getElementById("game-textarea");
+const GAMESECTION = document.getElementById("game-section");
+const USERSREADY = document.getElementById("usersReady");
+const ALLUSERS = document.getElementById("allUsers");
+const ROUND = document.getElementById("round");
 const x = 5;
+let i = 0;
+let r = 1;
 let you = "";
 let LASTCLICK = 0;
 let ICON = "";
@@ -59,9 +67,32 @@ function createElement(data, boolean) {
 	document.getElementById(`${data.name}`).children[1].innerText += data.name + you;
 }
 function SystemMessage(data) {
-	console.log("data", data);
 	const ITEMSys = document.createElement("div");
 	ITEMSys.setAttribute("class", "system-message");
 	ITEMSys.innerText = data.message;
 	CHATAREA.appendChild(ITEMSys);
+}
+function setReadyPLayers(data) {
+	USERSREADY.innerText = data.ready;
+	ALLUSERS.innerText = data.all;
+}
+function updateReadyPLayers(data) {
+	i++;
+	USERSREADY.innerText = i;
+	if (i == data) {
+		setTimeout(() => {
+			i = 0;
+			USERSREADY.innerText = i;
+			updateRound();
+			startNewRound();
+		}, 2000);
+	}
+}
+function updateRound() {
+	r++;
+	GAMETEXTSUBMIT.removeAttribute("disabled");
+	ROUND.innerText = r;
+	if (r === 7) {
+		endGame();
+	}
 }
