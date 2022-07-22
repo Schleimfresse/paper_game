@@ -13,22 +13,26 @@ const {
 	removeDisconnectFromArray,
 	removeStartedRoomFromArray,
 	rounds,
-	URI,
 	mongoose,
-	server,
+	dotenv,
+	addContentToDb,
+	Text
 } = require("./helpers/VariableDefinitions.js");
-const Text = require('./models/content');
 static;
 bodyparsing;
 listen;
 mongoose.connect(
-	`mongodb:${server}/database`,
+	process.env.URI,
 	() => {
 		console.log("connected");
 	},
 	(e) => console.error(e)
 );
-
+f();
+async function f() {
+	let content = new Text({ text: "Hello, this is a test obj" });
+	await content.save();
+}
 // initial - end -
 
 io.sockets.on("connection", connected);
@@ -92,12 +96,13 @@ function connected(socket) {
 			socket.emit("fail", false);
 		}
 	});
-	socket.on('addContentToDb', (data) => {
+	socket.on("addContentToDb", (data) => {
+		addContentToDb(data);
 		const quantity = gameIsOn.filter((e) => {
 			return e.lobby == data.game;
 		});
-		io.in(data.game).emit('updateReadyPlayers', quantity.length);
-	})
+		io.in(data.game).emit("updateReadyPlayers", quantity.length);
+	});
 	socket.on("removeUserElement", (name) => {
 		socket.broadcast.emit("removeUserElement", name);
 	});

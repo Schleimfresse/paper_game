@@ -19,20 +19,16 @@ SOCKET.on("StartGame", (data) => {
 GAMETEXTSUBMIT.addEventListener("click", () => {
 	let input = GAMETEXTAREA.value;
 	GAMETEXTSUBMIT.setAttribute("disabled", true);
-	GAMETEXTAREA.value = '';
+	GAMETEXTAREA.value = "";
 	let getinfo = GAMETEXTAREA.className;
 	const fromSplited = getinfo.split(" ");
 	from = fromSplited[0];
 	game = fromSplited[1];
-	data = { text: input, from: from, game: game };
-	SOCKET.emit('addContentToDb', data);
+	data = { text: input, from: from, game: game, round: r };
+	SOCKET.emit("addContentToDb", data);
 });
-SOCKET.on('updateReadyPlayers', (data) => {
+SOCKET.on("updateReadyPlayers", (data) => {
 	updateReadyPLayers(data);
 });
-function startNewRound() {
-
-}
-function endGame() {
-
-}
+function startNewRound() {}
+function endGame() {}

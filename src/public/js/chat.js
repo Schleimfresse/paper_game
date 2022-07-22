@@ -65,5 +65,6 @@ STARTBT.addEventListener("click", () => {
 	}
 });
 SOCKET.on("SystemMessage", (data) => {
+	document.title = 'Paper Game';
 	SystemMessage(data);
 });

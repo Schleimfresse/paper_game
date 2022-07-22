@@ -1,5 +1,6 @@
 const bodyparser = require("body-parser");
 const express = require("express");
+const dotenv = require('dotenv').config();
 const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
@@ -8,9 +9,9 @@ const bodyparsing = app.use(bodyparser.json({ limit: "1mb" }));
 const listen = server.listen(port, () => {
 	console.log(`app listening at Port: ${port}`);
 });
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const Text = require("../models/content");
 const static = app.use(express.static("src/public"));
-const URI = "mongodb+srv://user1:UJQ8ASHxMDNgEKEk@cluster0.fucjh.mongodb.net/?retryWrites=true&w=majority"
 /**
  * Holds the number of the online users.
  * @param number
@@ -73,12 +74,16 @@ function removeStartedRoomFromArray(array, data) {
 			let obj = spliceArray[0];
 			const filterforobjects = gameIsOn.filter((e) => {
 				return e.lobby == obj.lobby;
-			}); 
+			});
 			obj.playerindex = filterforobjects.length + 1;
 			gameIsOn.push(obj);
 			console.log(gameIsOn);
 		}
 	}
+}
+async function addContentToDb(data) {
+	let content = new Text({ text: data.text, from: data.from, round: data.r, game: data.game });
+	await content.save();
 }
 
 module.exports = {
@@ -98,8 +103,9 @@ module.exports = {
 	roomNo,
 	removeDisconnectFromArray,
 	removeStartedRoomFromArray,
+	addContentToDb,
 	rounds,
-	URI,
 	mongoose,
-	server,
+	dotenv,
+	Text,
 };

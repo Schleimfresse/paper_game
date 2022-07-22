@@ -16,6 +16,7 @@ SOCKET.on("connect", () => {
 });
 
 SOCKET.on("success", (data) => {
+	document.title = 'Lobby | Paper Game';
 	FORM.style.display = "none";
 	PREROOM.style.display = "block";
 	FORMCREATE.style.display = "none";
@@ -31,10 +32,12 @@ SOCKET.on("success", (data) => {
 
 // EventListner - start -
 JOINBT.addEventListener("click", () => {
+	document.title = 'Join | Paper Game';
 	JCSELC.style.display = "none";
 	FORM.style.display = "block";
 });
 CREATEBT.addEventListener("click", () => {
+	document.title = 'Create | Paper Game';
 	JCSELC.style.display = "none";
 	FORMCREATE.style.display = "block";
 });
