@@ -113,6 +113,10 @@ SOCKET.on("fail", (data) => {
 SOCKET.on("terminate", () => {
 	window.open("/", "_self");
 });
+SOCKET.on("reset", () => {
+	PREROOM.style.display = "none";
+	JCSELC.style.display = "flex";
+});
 // client <- server - end -
 
 // Extra content

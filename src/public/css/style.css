@@ -67,8 +67,7 @@ body {
 	justify-content: space-between;
 	max-width: fit-content;
 	margin: 0.7em;
-	background: rgb(167, 35, 58);
-	background: linear-gradient(90deg, rgba(167, 35, 58, 1) 0%, rgba(0, 18, 32, 1) 95%);
+	background-color: rgb(0 18 32);
 	box-shadow: var(--shadow);
 	backdrop-filter: blur(40px);
 	border: solid 2px transparent;
@@ -76,14 +75,7 @@ body {
 	transform: translateZ(0px);
 	overflow: visible;
 }
-@keyframes fadein {
-	0% {
-		transform: translateZ(20px);
-	}
-	100% {
-		transform: translateZ(0px);
-	}
-}
+
 .user-listitem:hover {
 	transform: translateZ(10px);
 }
@@ -266,7 +258,7 @@ body {
 	background-clip: padding-box;
 	display: flex;
 	flex-direction: column;
-	animation: fadein 0.3s ease-out;
+	animation: fadein 0.3s forwards ease-out;
 }
 
 .chat-name {
@@ -288,9 +280,16 @@ body {
 	box-sizing: border-box;
 	padding-bottom: 0.4em;
 	padding-top: 0.4em;
-	animation: fadein 0.3s ease-out;
+	animation: fadein 0.3s forwards ease-out;
 }
-
+@keyframes fadein {
+	0% {
+		transform: translateZ(20px);
+	}
+	100% {
+		transform: translateZ(0px);
+	}
+}
 header {
 	font-size: 1.5em;
 	border-bottom: 1px solid rgb(167 35 58);

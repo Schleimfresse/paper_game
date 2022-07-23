@@ -29,6 +29,7 @@ const GAMESECTION = document.getElementById("game-section");
 const USERSREADY = document.getElementById("usersReady");
 const ALLUSERS = document.getElementById("allUsers");
 const ROUND = document.getElementById("round");
+const SHOWCASE = document.getElementById("showcase");
 const BODY = document.querySelector("body");
 const HTML = document.querySelector("html");
 const x = 5;
@@ -73,6 +74,7 @@ function SystemMessage(data) {
 	ITEMSys.setAttribute("class", "system-message");
 	ITEMSys.innerText = data.message;
 	CHATAREA.appendChild(ITEMSys);
+	CHATAREA.scrollTop = CHATAREA.scrollHeight;
 }
 function setReadyPLayers(data) {
 	USERSREADY.innerText = data.ready;
@@ -93,8 +95,28 @@ function updateReadyPLayers(data) {
 function updateRound() {
 	r++;
 	GAMETEXTSUBMIT.removeAttribute("disabled");
-	ROUND.innerText = r;
 	if (r === 7) {
+		ROUND.innerText = 'End!'
 		endGame();
+	}
+	else {
+		ROUND.innerText = r;
+	}
+}
+function getInfo(input) {
+	if (input == undefined) {
+		let getinfo = GAMETEXTAREA.className;
+		const fromSplited = getinfo.split(" ");
+		from = fromSplited[0];
+		parseInt(from);
+		from++
+		game = fromSplited[1];
+		return (data = { from: from, game: game, round: r - 1 });
+	} else if (input != undefined) {
+		let getinfo = GAMETEXTAREA.className;
+		const fromSplited = getinfo.split(" ");
+		from = fromSplited[0];
+		game = fromSplited[1];
+		return (data = { text: input, from: from, game: game, round: r });
 	}
 }

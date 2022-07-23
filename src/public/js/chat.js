@@ -7,6 +7,7 @@ CHATSUBMIT.addEventListener("click", () => {
 			ITEM.innerHTML = `<span class="chat-name">${data.user}</span><span class="chat-message-content"></span>`;
 			ITEM.children[1].innerText = CHATTEXTFIELD.value;
 			CHATAREA.appendChild(ITEM);
+			CHATAREA.scrollTop = CHATAREA.scrollHeight;
 			data = { message: CHATTEXTFIELD.value, user: data.user, lobby: data.lobby };
 			SOCKET.emit("sendMessageToOtherClients", data);
 			CHATTEXTFIELD.value = "";
@@ -20,6 +21,7 @@ SOCKET.on("sendMessageToOtherClients", (data) => {
 	ITEM.innerHTML = `<span class="chat-name">${data.user}</span><span class="chat-message-content"></span>`;
 	ITEM.children[1].innerText = data.message;
 	CHATAREA.appendChild(ITEM);
+	CHATAREA.scrollTop = CHATAREA.scrollHeight;
 });
 
 STARTBT.addEventListener("click", () => {

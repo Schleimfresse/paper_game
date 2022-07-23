@@ -46,11 +46,7 @@ let gameIsOn = [];
  * @public
  */
 let roomNo = {};
-/**
- * Contains the number how much rounds are played; on default its set to 6
- * @public
- */
-const rounds = 6;
+
 /**
  * Removes the entry of the disconnected user from the userToRoom array.
  * @param {Object} userToRoom - Array
@@ -82,7 +78,12 @@ function removeStartedRoomFromArray(array, data) {
 	}
 }
 async function addContentToDb(data) {
-	let content = new Text({ text: data.text, from: data.from, round: data.r, game: data.game });
+	let content = new Text({
+		text: data.text,
+		from: parseInt(data.from),
+		round: data.round,
+		game: data.game,
+	});
 	await content.save();
 }
 function checkName(data) {
@@ -121,8 +122,8 @@ module.exports = {
 	removeDisconnectFromArray,
 	removeStartedRoomFromArray,
 	addContentToDb,
-	rounds,
 	mongoose,
 	checkName,
 	removeAllUsersFromArray,
+	Text,
 };
