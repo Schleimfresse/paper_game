@@ -10,6 +10,7 @@ Still in progress; round about 40/100%
 - Chat for pre-lobby
 - QoL changes
 - Actual gameroom added
+- Design remastered
 - ...
 
 ## Licence
