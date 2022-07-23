@@ -33,12 +33,12 @@ SOCKET.on("success", (data) => {
 JOINBT.addEventListener("click", () => {
 	document.title = "Join | Paper Game";
 	JCSELC.style.display = "none";
-	FORM.style.display = "block";
+	FORM.style.display = "flex";
 });
 CREATEBT.addEventListener("click", () => {
 	document.title = "Create | Paper Game";
 	JCSELC.style.display = "none";
-	FORMCREATE.style.display = "block";
+	FORMCREATE.style.display = "flex";
 });
 BACKTOFORM.addEventListener("click", () => {
 	SOCKET.emit("getInfoForChat", SOCKET.id);
@@ -109,6 +109,9 @@ SOCKET.on("fail", (data) => {
 		}
 		LASTCLICK = Date.now();
 	}
+});
+SOCKET.on("terminate", () => {
+	window.open("/", "_self");
 });
 // client <- server - end -
 

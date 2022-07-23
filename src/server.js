@@ -16,6 +16,7 @@ const {
 	mongoose,
 	addContentToDb,
 	checkName,
+	removeAllUsersFromArray,
 } = require("./helpers/VariableDefinitions.js");
 static;
 bodyparsing;
@@ -38,36 +39,36 @@ function connected(socket) {
 		let lobby = roomNo[data.lobby];
 		if (data.lobby == lobby) {
 			if (checkName(data)) {
-
-			
-			socket.join(lobby);
-			console.log(`New client connection: ${clientNo.number}, room nr. ${lobby} (${socket.id})`);
-			let senddata = {
-				room: lobby,
-				client: clientNo.number,
-				name: data.name,
-				icon: false,
-			};
-			socket.emit("success", senddata);
-			console.log("Just came: ", data.name);
-			users[socket.id] = data.name;
-			let createData = userToRoom.filter(function (e) {
-				return e.lobby == lobby;
-			});
-			userToRoom.push({
-				name: data.name,
-				lobby: lobby,
-				socketid: socket.id,
-				icon: false,
-			});
-			socket.emit("createOtherOnlineUsers", createData);
-		}
-		else {
-			data = {boolean: true, message: 'In that lobby you wanted to join,<br /> is already someone with that name'}
-			socket.emit("fail", data);
-		}
+				socket.join(lobby);
+				console.log(`New client connection: ${clientNo.number}, room nr. ${lobby} (${socket.id})`);
+				let senddata = {
+					room: lobby,
+					client: clientNo.number,
+					name: data.name,
+					icon: false,
+				};
+				socket.emit("success", senddata);
+				console.log("Just came: ", data.name);
+				users[socket.id] = data.name;
+				let createData = userToRoom.filter(function (e) {
+					return e.lobby == lobby;
+				});
+				userToRoom.push({
+					name: data.name,
+					lobby: lobby,
+					socketid: socket.id,
+					icon: false,
+				});
+				socket.emit("createOtherOnlineUsers", createData);
+			} else {
+				data = {
+					boolean: true,
+					message: "In that lobby you wanted to join,<br /> is already someone with that name",
+				};
+				socket.emit("fail", data);
+			}
 		} else {
-			data = {boolean: true, message: 'This lobby does not exists'}
+			data = { boolean: true, message: "This lobby does not exists" };
 			socket.emit("fail", data);
 		}
 	});
@@ -96,7 +97,7 @@ function connected(socket) {
 			});
 			socket.broadcast.emit("ActiveLobbyDataRequest", userToRoom);
 		} else {
-			data = {boolean: false, message: 'This lobby already exists'}
+			data = { boolean: false, message: "This lobby already exists" };
 			socket.emit("fail", data);
 		}
 	});
@@ -156,10 +157,17 @@ function connected(socket) {
 			socket.broadcast.emit("removeUserElement", { user: dcuser.name });
 			if (dcuser.name === dcuser.lobby) {
 				socket.leave(dcuser.lobby);
-				removeDisconnectFromArray(userToRoom, socket);
+				removeAllUsersFromArray(userToRoom, dcuser);
+				io.in(dcuser.lobby).socketsLeave(dcuser.lobby);
 				if (io.sockets.adapter.rooms.get(dcuser.lobby) == undefined) {
 					delete roomNo[dcuser.lobby];
 				}
+				socket.broadcast.emit("SystemMessage", {
+					message: `${dcuser.name} disconnected, the room will be terminated; you will be redirected shortly.`,
+				});
+				setTimeout(() => {
+					socket.broadcast.emit('terminate');
+				}, 5000);
 			} else {
 				socket.leave(dcuser.lobby);
 				removeDisconnectFromArray(userToRoom, socket);

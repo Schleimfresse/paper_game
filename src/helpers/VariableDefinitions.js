@@ -93,7 +93,16 @@ function checkName(data) {
 		return true;
 	}
 }
-
+function removeAllUsersFromArray(userToRoom, dcuser) {
+	const indexOfObject = userToRoom.filter((e) => {
+		return e.lobby == dcuser.lobby;
+	});
+	console.log("index", indexOfObject.length);
+	for (i = indexOfObject.length - 1; i >= 0; i--) {
+		userToRoom.splice(indexOfObject[i], 1);
+	}
+	console.log("users", userToRoom);
+}
 module.exports = {
 	bodyparser,
 	app,
@@ -115,4 +124,5 @@ module.exports = {
 	rounds,
 	mongoose,
 	checkName,
+	removeAllUsersFromArray,
 };

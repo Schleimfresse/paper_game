@@ -29,6 +29,8 @@ const GAMESECTION = document.getElementById("game-section");
 const USERSREADY = document.getElementById("usersReady");
 const ALLUSERS = document.getElementById("allUsers");
 const ROUND = document.getElementById("round");
+const BODY = document.querySelector("body");
+const HTML = document.querySelector("html");
 const x = 5;
 let i = 0;
 let r = 1;
@@ -48,7 +50,7 @@ function IconChooser(data) {
 }
 function BackToForm(data) {
 	document.getElementById(data.user).remove();
-	SOCKET.emit("removeUserElement", {user: data.user});
+	SOCKET.emit("removeUserElement", { user: data.user });
 	PREROOM.style.display = "none";
 	JCSELC.style.display = "block";
 }

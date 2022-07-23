@@ -4,7 +4,8 @@ const contentSchema = new mongoose.Schema({
     text: String,
     from: Number,
     round: Number,
-    game: String
+    game: String,
+    creator: String
 }, {collection: 'textcontent'});
 
 module.exports = mongoose.model("Text", contentSchema);
