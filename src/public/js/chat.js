@@ -2,7 +2,6 @@ CHATSUBMIT.addEventListener("click", () => {
 	if (CHATTEXTFIELD.value != "") {
 		SOCKET.emit("getInfoForChat", SOCKET.id);
 		SOCKET.once("getInfoForChat", (data) => {
-			console.log("data", data);
 			let ITEM = document.createElement("div");
 			ITEM.setAttribute("class", "message");
 			ITEM.innerHTML = `<span class="chat-name">${data.user}</span><span class="chat-message-content"></span>`;

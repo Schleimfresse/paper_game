@@ -12,11 +12,10 @@ SOCKET.on("ActiveLobbyDataRequest", (data) => {
 });
 SOCKET.on("connect", () => {
 	SOCKET.emit("ActiveLobbyDataRequest");
-
 });
 
 SOCKET.on("success", (data) => {
-	document.title = 'Lobby | Paper Game';
+	document.title = "Lobby | Paper Game";
 	FORM.style.display = "none";
 	PREROOM.style.display = "block";
 	FORMCREATE.style.display = "none";
@@ -32,17 +31,20 @@ SOCKET.on("success", (data) => {
 
 // EventListner - start -
 JOINBT.addEventListener("click", () => {
-	document.title = 'Join | Paper Game';
+	document.title = "Join | Paper Game";
 	JCSELC.style.display = "none";
 	FORM.style.display = "block";
 });
 CREATEBT.addEventListener("click", () => {
-	document.title = 'Create | Paper Game';
+	document.title = "Create | Paper Game";
 	JCSELC.style.display = "none";
 	FORMCREATE.style.display = "block";
 });
 BACKTOFORM.addEventListener("click", () => {
-	BackToForm();
+	SOCKET.emit("getInfoForChat", SOCKET.id);
+	SOCKET.once("getInfoForChat", (data) => {
+		BackToForm(data);
+	});
 });
 // EventListner - end -
 
@@ -70,14 +72,11 @@ SOCKET.on("AddElementToOtherClients", (data) => {
 	createElement(data, false);
 });
 
-SOCKET.on("removeUserElement", (name) => {
-	if (name != null) {
-		document.getElementById(`${name}`).remove();
-	}
+SOCKET.on("removeUserElement", (data) => {
+	document.getElementById(data.user).remove();
 });
 
 SOCKET.on("createOtherOnlineUsers", (data) => {
-	console.log("createOtherOnlineUsers data:", data);
 	for (item of data) {
 		createElement(item, false);
 	}
@@ -89,16 +88,18 @@ SOCKET.on("startbt", () => {
 	STARTBT.innerHTML = "Start";
 	PREROOM.appendChild(STARTBT);
 });
-SOCKET.on("fail", (status) => {
+SOCKET.on("fail", (data) => {
 	if (!(LASTCLICK >= Date.now() - 3400)) {
-		if (status) {
+		if (data.boolean) {
+			FAIL.innerHTML = data.message;
 			FAIL.style.visibility = "visible";
 			FAIL.classList.add("transition");
 			setTimeout(() => {
 				FAIL.classList.remove("transition");
 				FAIL.style.visibility = "hidden";
 			}, 3000);
-		} else if (!status) {
+		} else if (!data.boolean) {
+			FAILCREATE.innerHTML = data.message;
 			FAILCREATE.style.visibility = "visible";
 			FAILCREATE.classList.add("transition");
 			setTimeout(() => {

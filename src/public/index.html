@@ -45,7 +45,7 @@
 			<input id="Create" type="button" value="Create" />
 		</div>
 		<form action="" id="form" onsubmit="return false;">
-			<div class="fail" id="fail">This lobby does not exists</div>
+			<div class="fail" id="fail"></div>
 			<label><h1 id="h1">Name</h1></label>
 			<input id="name" type="text" placeholder="Your name" required autocomplete="off" /><br />
 			<input id="roomName" type="text" placeholder="Lobby name" required autocomplete="off" /><br />
@@ -58,16 +58,16 @@
 			<input type="submit" value="Create" />
 		</form>
 		<div id="pre-room" style="display: none">
-			<div id="pre-room-header">
-				<div id="RoomNo"></div>
-				<div id="waitroom-box-header">
-					<h1>Players connected:</h1>
-					<div id="backToForm">
-						<ion-icon class="icon-size-medium" name="arrow-back-circle-outline"></ion-icon>
+				<div id="pre-room-header">
+					<div id="RoomNo"></div>
+					<div id="waitroom-box-header">
+						<h1>Players connected:</h1>
+						<div id="backToForm">
+							<ion-icon class="icon-size-medium" name="arrow-back-circle-outline"></ion-icon>
+						</div>
 					</div>
-				</div>
+				<ul id="player-list"></ul>
 			</div>
-			<ul id="player-list"></ul>
 			<div id="chat">
 				<div id="chatarea"></div>
 				<form id="chatform" action="" onsubmit="return false;">

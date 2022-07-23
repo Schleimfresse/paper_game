@@ -1,6 +1,6 @@
 const bodyparser = require("body-parser");
 const express = require("express");
-const dotenv = require('dotenv').config();
+require("dotenv").config();
 const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
@@ -28,7 +28,7 @@ clientNo = {
  */
 let users = {};
 /**
- * Contains all users who are currently online.
+ * Contains all users who are currently online nad in which room they are
  * @param {*} Object
  * @returns The current online users
  * @public
@@ -42,7 +42,7 @@ let userToRoom = [];
 let gameIsOn = [];
 /**
  * Contains all rooms that are created and active; empty rooms are deleted
- * @returns a list of the current created rooms
+ * @returns a list of the current created rooms and from which user they are created, usally the same, because the room is named after the user
  * @public
  */
 let roomNo = {};
@@ -85,6 +85,14 @@ async function addContentToDb(data) {
 	let content = new Text({ text: data.text, from: data.from, round: data.r, game: data.game });
 	await content.save();
 }
+function checkName(data) {
+	const check = userToRoom.some((e) => e.name === data.name && e.lobby === data.lobby);
+	if (check) {
+		return false;
+	} else {
+		return true;
+	}
+}
 
 module.exports = {
 	bodyparser,
@@ -106,6 +114,5 @@ module.exports = {
 	addContentToDb,
 	rounds,
 	mongoose,
-	dotenv,
-	Text,
+	checkName,
 };

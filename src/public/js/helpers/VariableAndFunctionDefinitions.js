@@ -46,11 +46,11 @@ function IconChooser(data) {
 		return ICON;
 	}
 }
-function BackToForm() {
-	document.getElementById(`${name}`).remove();
-	SOCKET.emit("removeUserElement", name);
+function BackToForm(data) {
+	document.getElementById(data.user).remove();
+	SOCKET.emit("removeUserElement", {user: data.user});
 	PREROOM.style.display = "none";
-	FORM.style.display = "block";
+	JCSELC.style.display = "block";
 }
 function createElement(data, boolean) {
 	IconChooser(data);

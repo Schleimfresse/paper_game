@@ -5,6 +5,6 @@ const contentSchema = new mongoose.Schema({
     from: Number,
     round: Number,
     game: String
-});
+}, {collection: 'textcontent'});
 
 module.exports = mongoose.model("Text", contentSchema);

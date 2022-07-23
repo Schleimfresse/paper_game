@@ -9,7 +9,7 @@
 	--darker_gray: #6e6e6e;
 	--border-color: #404040;
 	--color: #fff;
-	--shadow: 0px 3px 6px 0px rgba(107, 107, 107, 40%), 0px 1px 3px 0px rgb(0 0 0 / 8%);
+	--shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
 }
 
 body,
@@ -18,7 +18,10 @@ html {
 	padding: 0;
 	height: 100vh;
 	width: 100%;
-	background-color: var(--standart_gray);
+	background-image: url("../img/background.svg");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
 	color: var(--color);
 }
 #pre-room {
@@ -26,23 +29,62 @@ html {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	min-height: 50vh;
+	height: 50vh;
 	min-width: 70%;
-	border: var(--border-color) 1px solid;
+	background-color: rgba(78, 78, 78, 0.2);
+	box-shadow: var(--shadow);
+	backdrop-filter: blur(40px);
+	border: solid 2px transparent;
+	background-clip: padding-box;
+	border-radius: 20px;
 	padding: 1em;
 	position: absolute;
+}
+#player-list {
+	transform-style: preserve-3d;
+	perspective: 500px;
+	max-height: 70%;
+	overflow-y: auto;
+	position: absolute;
+	padding-bottom: 20px;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+	min-width: 50%;
+}
+#player-list::-webkit-scrollbar {
+	display: none;
+}
+#chatarea::-webkit-scrollbar {
+	display: none;
 }
 .user-listitem {
 	list-style: none;
 	padding: 0.5em;
-	background-color: var(--listitem-bg);
 	border-radius: 10px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	max-width: fit-content;
 	margin: 0.7em;
-	border: 1px solid var(--border-color);
+	background: rgb(167, 35, 58);
+	background: linear-gradient(90deg, rgba(167, 35, 58, 1) 0%, rgba(0, 18, 32, 1) 95%);
+	box-shadow: var(--shadow);
+	backdrop-filter: blur(40px);
+	border: solid 2px transparent;
+	background-clip: padding-box;
+	transform: translateZ(0px);
+	overflow: visible;
+}
+@keyframes fadein {
+	0% {
+		transform: translateZ(20px);
+	}
+	100% {
+		transform: translateZ(0px);
+	}
+}
+.user-listitem:hover {
+	transform: translateZ(10px);
 }
 .icon-size-small {
 	font-size: 1.5em;
@@ -68,7 +110,12 @@ html {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	position: absolute;
-	border: var(--border-color) 1px solid;
+	border-radius: 20px;
+	background-color: rgba(78, 78, 78, 0.2);
+	box-shadow: var(--shadow);
+	backdrop-filter: blur(40px);
+	border: solid 2px transparent;
+	background-clip: padding-box;
 }
 #form,
 #formCreate {
@@ -129,18 +176,18 @@ html {
 .fail {
 	color: red;
 	visibility: hidden;
-	word-wrap: normal;
 	font-weight: bold;
 }
 .transition {
-	animation: animatefaildiv 900ms forwards 2s ease-out;
+	animation: animatefaildiv 900ms forwards 5s ease-out;
+	animation-fill-mode: forwards;
 }
 @keyframes animatefaildiv {
 	0% {
-		opacity: 1;
+		opacity: 0;
 	}
 	100% {
-		opacity: 0;
+		opacity: 1;
 		visibility: hidden;
 	}
 }
@@ -196,22 +243,30 @@ html {
 	max-width: 70%;
 }
 #chatarea {
-	overflow-y: visible;
+	overflow-y: auto;
 	height: 100%;
 	top: 0;
 	height: calc(100% - 40px);
 	min-width: 100%;
 	position: absolute;
+	transform-style: preserve-3d;
+	perspective: 500px;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 .message {
 	box-sizing: border-box;
 	margin-bottom: 0.3em;
 	padding: 0.5em;
 	padding-inline: 10px 10px;
-	background-color: rgb(37, 37, 37);
+	background-color: rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(10px);
+	background-clip: padding-box;
 	display: flex;
 	flex-direction: column;
+	animation: fadein 0.3s ease-out;
 }
+
 .chat-name {
 	position: relative;
 	left: 0;
@@ -231,11 +286,15 @@ html {
 	box-sizing: border-box;
 	padding-bottom: 0.4em;
 	padding-top: 0.4em;
+	animation: fadein 0.3s ease-out;
 }
+
 header {
 	font-size: 1.5em;
-	border-bottom: 1px solid rgb(245, 241, 30);
+	border-bottom: 1px solid rgb(167 35 58);
 	display: flex;
+	background: rgb(167, 35, 58);
+	background: linear-gradient(90deg, rgba(167, 35, 58, 1) 0%, rgba(0, 18, 32, 1) 74%);
 	align-items: center;
 	justify-content: space-between;
 	padding: 0.2em 0 0.2em 0;
@@ -256,21 +315,28 @@ header #copyrights {
 	position: relative;
 	height: 100vh;
 	width: 100vw;
+	background-image: url(../img/gamebackground.svg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 #game-textarea {
 	height: 12em;
 	width: 50vw;
 	margin-left: 2em;
 	margin-top: 2em;
-	border: 1px solid var(--border-color);
+	border: 2px solid transparent;
 	border-radius: 5px;
 	resize: vertical;
 	padding-inline: 10px 20px;
 	font-size: 1.5em;
-	background-color: #2e2e2e;
 	color: #fff;
 	outline: none;
 	overflow-y: visible;
+	background-color: rgba(0,0,0,0.2);
+    overflow-y: visible;
+    background-clip: padding-box;
+    backdrop-filter: blur(5px);
 }
 #game-text-submit {
 	margin-left: 64px;
@@ -300,7 +366,7 @@ header #copyrights {
 	flex-direction: column;
 	align-items: flex-start;
 }
-.information-wrapper{
+.information-wrapper {
 	margin-right: 2em;
 	display: flex;
 	align-items: center;

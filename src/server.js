@@ -14,9 +14,8 @@ const {
 	removeStartedRoomFromArray,
 	rounds,
 	mongoose,
-	dotenv,
 	addContentToDb,
-	Text
+	checkName,
 } = require("./helpers/VariableDefinitions.js");
 static;
 bodyparsing;
@@ -28,11 +27,6 @@ mongoose.connect(
 	},
 	(e) => console.error(e)
 );
-f();
-async function f() {
-	let content = new Text({ text: "Hello, this is a test obj" });
-	await content.save();
-}
 // initial - end -
 
 io.sockets.on("connection", connected);
@@ -43,6 +37,9 @@ function connected(socket) {
 	socket.on("join", (data) => {
 		let lobby = roomNo[data.lobby];
 		if (data.lobby == lobby) {
+			if (checkName(data)) {
+
+			
 			socket.join(lobby);
 			console.log(`New client connection: ${clientNo.number}, room nr. ${lobby} (${socket.id})`);
 			let senddata = {
@@ -64,8 +61,14 @@ function connected(socket) {
 				icon: false,
 			});
 			socket.emit("createOtherOnlineUsers", createData);
+		}
+		else {
+			data = {boolean: true, message: 'In that lobby you wanted to join,<br /> is already someone with that name'}
+			socket.emit("fail", data);
+		}
 		} else {
-			socket.emit("fail", true);
+			data = {boolean: true, message: 'This lobby does not exists'}
+			socket.emit("fail", data);
 		}
 	});
 	socket.on("create", (data) => {
@@ -93,7 +96,8 @@ function connected(socket) {
 			});
 			socket.broadcast.emit("ActiveLobbyDataRequest", userToRoom);
 		} else {
-			socket.emit("fail", false);
+			data = {boolean: false, message: 'This lobby already exists'}
+			socket.emit("fail", data);
 		}
 	});
 	socket.on("addContentToDb", (data) => {
@@ -103,8 +107,8 @@ function connected(socket) {
 		});
 		io.in(data.game).emit("updateReadyPlayers", quantity.length);
 	});
-	socket.on("removeUserElement", (name) => {
-		socket.broadcast.emit("removeUserElement", name);
+	socket.on("removeUserElement", (data) => {
+		socket.broadcast.emit("removeUserElement", data);
 	});
 
 	socket.on("NewUserUpdateOtherClients", (data) => {
@@ -149,16 +153,19 @@ function connected(socket) {
 		if (dcuser != undefined) {
 			Systemdata = { message: `${dcuser.name} has left the lobby` };
 			socket.to(dcuser.lobby).emit("SystemMessage", Systemdata);
-			socket.broadcast.emit("removeUserElement", dcuser.name);
+			socket.broadcast.emit("removeUserElement", { user: dcuser.name });
 			if (dcuser.name === dcuser.lobby) {
-				roomNo[dcuser.lobby] = undefined;
 				socket.leave(dcuser.lobby);
 				removeDisconnectFromArray(userToRoom, socket);
-				console.log("Usertoroom", userToRoom);
+				if (io.sockets.adapter.rooms.get(dcuser.lobby) == undefined) {
+					delete roomNo[dcuser.lobby];
+				}
 			} else {
 				socket.leave(dcuser.lobby);
 				removeDisconnectFromArray(userToRoom, socket);
-				console.log("Usertoroom", userToRoom);
+				if (io.sockets.adapter.rooms.get(dcuser.lobby) == undefined) {
+					delete roomNo[dcuser.lobby];
+				}
 			}
 		}
 		clientNo.number--;
