@@ -32,9 +32,11 @@ const ROUND = document.getElementById("round");
 const SHOWCASE = document.getElementById("showcase");
 const BODY = document.querySelector("body");
 const HTML = document.querySelector("html");
+const ENDSECTION = document.getElementById('end-section');
+const ENDNEXT = document.getElementById('end-card-next');
 const x = 5;
 let i = 0;
-let r = 1;
+let r = 6;
 let you = "";
 let LASTCLICK = 0;
 let ICON = "";
@@ -50,8 +52,9 @@ function IconChooser(data) {
 	}
 }
 function BackToForm(data) {
-	document.getElementById(data.user).remove();
-	SOCKET.emit("removeUserElement", { user: data.user });
+	PLAYERLIST.innerHTML = '';
+	CHATAREA.innerHTML = '';
+	SOCKET.emit("removeUserElement", data);
 	PREROOM.style.display = "none";
 	JCSELC.style.display = "block";
 }

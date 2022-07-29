@@ -12,22 +12,17 @@ const {
 	roomNo,
 	removeDisconnectFromArray,
 	removeStartedRoomFromArray,
-	mongoose,
 	addContentToDb,
 	checkName,
 	removeAllUsersFromArray,
 	Text,
+	User,
+	connectDB,
 } = require("./helpers/VariableDefinitions.js");
 static;
 bodyparsing;
 listen;
-mongoose.connect(
-	process.env.URI,
-	() => {
-		console.log("connected");
-	},
-	(e) => console.error(e)
-);
+connectDB();
 // initial - end -
 
 io.sockets.on("connection", connected);
@@ -111,7 +106,24 @@ function connected(socket) {
 	});
 
 	socket.on("removeUserElement", (data) => {
-		socket.broadcast.emit("removeUserElement", data);
+		delete users[socket.id];
+		console.log("data", data);
+		io.to(data.lobby).emit("removeUserElement", data);
+		if (data.user === data.lobby) {
+			socket.leave(data.lobby);
+			removeAllUsersFromArray(userToRoom, data);
+			io.to(data.lobby).emit("SystemMessage", {
+				message: `${data.user} left the lobby, the room will be terminated; you will be redirected shortly.`,
+			});
+			setTimeout(() => {
+				io.to(data.lobby).emit("terminate");
+				io.to(data.lobby).socketsLeave(data.lobby);
+				if (io.sockets.adapter.rooms.get(data.lobby) == undefined) {
+					delete roomNo[data.lobby];
+				}
+			}, 5000);
+		}
+		removeDisconnectFromArray(userToRoom, socket);
 	});
 
 	socket.on("NewUserUpdateOtherClients", (data) => {
@@ -130,7 +142,7 @@ function connected(socket) {
 			return e.lobby == userObject.lobby;
 		});
 		data = { user: userObject.name, lobby: userObject.lobby, amount: playerAmount.length };
-		socket.emit("getInfoForChat", data);
+		io.to(data.lobby).emit("getInfoForChat", data);
 	});
 
 	socket.on("sendMessageToOtherClients", (data) => {
@@ -149,6 +161,7 @@ function connected(socket) {
 		const currentRoom = gameIsOn.filter((e) => {
 			return e.lobby == data;
 		});
+
 		senddata = { all: currentRoom.length };
 		socket.to(data).emit("getLength", senddata);
 	});
@@ -157,12 +170,14 @@ function connected(socket) {
 	});
 
 	socket.on("getDataFromDb", (data) => {
-		console.log("data get for init", data);
 		async function getData() {
-			data = await Text.findOne({ from: data.from, game: data.game, round: data.round });
-			console.log("data from getDataFromDb", data);
-			console.log("the data game: ", data.game);
-			socket.to(data.game).emit("DataFromDb", data);
+			console.log("socket.id:", socket.id);
+			console.log("data get for init", data.datanew);
+			senddata = await Text.find({ game: data.datanew.game, round: data.datanew.round });
+			console.log("data from getDataFromDb", senddata);
+			console.log("the data game: ", data.datanew.game);
+			finaldata = { senddata: senddata, data: data.dataall };
+			io.in(data.datanew.game).emit("DataFromDb", finaldata);
 		}
 		getData();
 	});
@@ -170,28 +185,28 @@ function connected(socket) {
 	socket.on("disconnect", () => {
 		console.log("DISCONNECTION for ", socket.id);
 		console.log("disconn user: ", users[socket.id]);
-
+		delete users[socket.id];
 		let dcuser = userToRoom.find(function (e) {
 			return e.socketid === socket.id;
 		});
 		if (dcuser != undefined) {
 			Systemdata = { message: `${dcuser.name} has left the lobby` };
-			socket.to(dcuser.socketid).emit("reset");
-			socket.broadcast.emit("SystemMessage", Systemdata);
-			socket.broadcast.emit("removeUserElement", { user: dcuser.name });
+			io.to(dcuser.lobby).emit("SystemMessage", Systemdata);
+			io.to(dcuser.lobby).emit("removeUserElement", { user: dcuser.name });
 			if (dcuser.name === dcuser.lobby) {
 				socket.leave(dcuser.lobby);
 				removeAllUsersFromArray(userToRoom, dcuser);
-				io.in(dcuser.lobby).socketsLeave(dcuser.lobby);
 				if (io.sockets.adapter.rooms.get(dcuser.lobby) == undefined) {
+					// When lobby is empty (dcuser.lobby), because all clients left and the room then gets deleted, the room gets removed from the array
 					delete roomNo[dcuser.lobby];
 				}
-				socket.broadcast.emit("SystemMessage", {
+				io.to(dcuser.lobby).emit("SystemMessage", {
 					message: `${dcuser.name} disconnected, the room will be terminated; you will be redirected shortly.`,
 				});
 				setTimeout(() => {
-					socket.broadcast.emit("terminate");
+					io.to(dcuser.lobby).emit("terminate");
 				}, 5000);
+				io.to(dcuser.lobby).socketsLeave(dcuser.lobby);
 			} else {
 				socket.leave(dcuser.lobby);
 				removeDisconnectFromArray(userToRoom, socket);

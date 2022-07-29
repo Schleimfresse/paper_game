@@ -10,6 +10,7 @@ SOCKET.on("ActiveLobbyDataRequest", (data) => {
 		}
 	}
 });
+
 SOCKET.on("connect", () => {
 	SOCKET.emit("ActiveLobbyDataRequest");
 });
@@ -35,20 +36,20 @@ JOINBT.addEventListener("click", () => {
 	JCSELC.style.display = "none";
 	FORM.style.display = "flex";
 });
+
 CREATEBT.addEventListener("click", () => {
 	document.title = "Create | Paper Game";
 	JCSELC.style.display = "none";
 	FORMCREATE.style.display = "flex";
 });
+
 BACKTOFORM.addEventListener("click", () => {
 	SOCKET.emit("getInfoForChat", SOCKET.id);
 	SOCKET.once("getInfoForChat", (data) => {
 		BackToForm(data);
 	});
 });
-// EventListner - end -
 
-// client -> server - start -
 FORM.addEventListener("submit", () => {
 	let lobbyName = roomName.value;
 	let name = NAMEJOIN.value;
@@ -61,7 +62,10 @@ FORMCREATE.addEventListener("submit", () => {
 	SOCKET.emit("create", name);
 });
 
-// client -> server - end -
+ENDNEXT.addEventListener('click', () => {
+
+})
+// EventListner - end -
 
 // client <- server - start -
 SOCKET.on("disconnected", function () {

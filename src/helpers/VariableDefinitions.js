@@ -11,7 +11,9 @@ const listen = server.listen(port, () => {
 });
 const mongoose = require("mongoose");
 const Text = require("../models/content");
+const User = require("../models/users");
 const static = app.use(express.static("src/public"));
+const connectDB = require("../config/db");
 /**
  * Holds the number of the online users.
  * @param number
@@ -28,8 +30,7 @@ clientNo = {
  */
 let users = {};
 /**
- * Contains all users who are currently online nad in which room they are
- * @param {*} Object
+ * Contains all users who are currently online and in which room they are
  * @returns The current online users
  * @public
  */
@@ -46,7 +47,6 @@ let gameIsOn = [];
  * @public
  */
 let roomNo = {};
-
 /**
  * Removes the entry of the disconnected user from the userToRoom array.
  * @param {Object} userToRoom - Array
@@ -122,8 +122,9 @@ module.exports = {
 	removeDisconnectFromArray,
 	removeStartedRoomFromArray,
 	addContentToDb,
-	mongoose,
 	checkName,
 	removeAllUsersFromArray,
 	Text,
+	User,
+	connectDB
 };

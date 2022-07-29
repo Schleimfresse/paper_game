@@ -1,4 +1,5 @@
 function StartGame(data) {
+	document.title = 'Paper Game';
 	HEADER.style.display = "none";
 	PREROOM.style.display = "none";
 	GAMESECTION.style.display = "flex";
@@ -27,21 +28,32 @@ function startNewRound() {
 	SOCKET.emit("getLength", getInfo(undefined).game);
 	SOCKET.once("getLength", (data) => {
 		datanew = {
-			from: getInfo(undefined).from,
 			game: getInfo(undefined).game,
 			round: getInfo(undefined).round,
+			from: getInfo(undefined).from,
 		};
 		if (datanew.from > data.all) {
+			data = { datanew: datanew, dataall: data.all };
 			datanew.from = 1;
-			SOCKET.emit("getDataFromDb", datanew);
+			SOCKET.emit("getDataFromDb", data);
 		}
 	});
 }
-function endGame() {}
+function endGame() {
+	GAMESECTION.style.display = "none";
+	ENDSECTION.style.display = 'flex';
+}
 
 SOCKET.on("DataFromDb", (data) => {
-	console.log("gotten Data:", data);
-	SHOWCASE.innerText = data.text;
+	datanew = {
+		from: getInfo(undefined).from,
+		round: getInfo(undefined).round,
+	};
+	if (datanew.from > data.data) {
+		datanew.from = 1;
+	}
+	const getNeededObj = data.senddata.find((e) => {
+		return e.from == datanew.from && e.round == datanew.round;
+	});
+	SHOWCASE.innerText = getNeededObj.text;
 });
-
-// Taken alle das gleiche object etwas an der länge o.ä. ändern!
